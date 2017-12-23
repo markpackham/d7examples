@@ -168,7 +168,8 @@ function block_example_block_view($delta = '')
 
         case 'example_packham':
             $block['subject'] = t('Mark Packham Block');
-            $block['content'] = t('This is a new block I made.');
+            //$block['content'] = t('This is a new block I made.');
+            $block['content'] = t("Prints the day, date, month, year, time, AM or PM: ").date("l jS \of F Y h:i:s A");
             break;
     }
     return $block;
