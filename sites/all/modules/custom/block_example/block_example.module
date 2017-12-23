@@ -169,7 +169,7 @@ function block_example_block_view($delta = '')
         case 'example_packham':
             $block['subject'] = t('Mark Packham Block');
             //$block['content'] = t('This is a new block I made.');
-            $block['content'] = t("Prints the day, date, month, year, time, AM or PM: ").date("l jS \of F Y h:i:s A");
+            $block['content'] = t("Prints the day, date, month, year, time, AM or PM: ") . date("l jS \of F Y h:i:s A");
             break;
     }
     return $block;
@@ -268,6 +268,23 @@ function block_example_block_view_alter(&$data, $block)
         $block->title = isset($block->title) ? drupal_strtoupper($block->title) : '';
     }
 }
+
+
+/**
+ * Implements hook_help().
+ */
+function block_example_help($path, $arg)
+{
+    switch ($path) {
+        case 'admin/help#block_example':
+            $output = '';
+            $output .= '<h3>' . t('About') . '</h3>';
+            $output .= '<p>' . t('This is just a test to see if I can get hook_help to work for block_example Module') . '</p>';
+            return $output;
+    }
+}
+
+
 /**
  * @} End of "defgroup block_example".
  */
