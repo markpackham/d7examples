@@ -180,7 +180,6 @@ function action_example_menu() {
   return $items;
 }
 
-
 /**
  * A simple page to explain to the developer what to do.
  */

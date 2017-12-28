@@ -41,6 +41,10 @@ function page_example_help($path, $arg)
             // Help text for the simple page registered for this path.
             return t('This is help text for the simple page.');
 
+        case 'examples/page_example/simple2':
+            // Help text for the simple page registered for this path.
+            return t('This is help text for the simple page2, not very original.');
+
         case 'admin/help#page_example':
             // Help text for the admin section, using the module name in the path.
             return t("This is help text created in the page example's second case.");
@@ -60,11 +64,15 @@ function page_example_permission()
     return array(
         'access simple page' => array(
             'title' => t('Access simple page'),
-            'description' => t('Allow users to access simple page'),
+            'description' => t('Allow users to access simple page, yeah I really wrote this.'),
+        ),
+        'access simple page2' => array(
+            'title' => t('Access simple page2'),
+            'description' => t('Allow users to access simple page2, yeah I really wrote this AGAIN.'),
         ),
         'access arguments page' => array(
             'title' => t('Access page with arguments'),
-            'description' => t('Allow users to access page with arguments'),
+            'description' => t('Allow users to access page with arguments, I live in the Page Example Module'),
         ),
     );
 }
@@ -114,9 +122,15 @@ function page_example_menu()
     );
 
     $items['examples/page_example/simple'] = array(
-        'title' => 'Simple - no arguments',
+        'title' => 'Simple - no arguments ok Mark',
         'page callback' => 'page_example_simple',
         'access arguments' => array('access simple page'),
+    );
+
+    $items['examples/page_example/simple2'] = array(
+        'title' => 'Simple 2 - no arguments ok Mark2',
+        'page callback' => 'page_example_simple2',
+        'access arguments' => array('access simple page2'),
     );
 
     // By using the MENU_CALLBACK type, we can register the callback for this
@@ -171,6 +185,11 @@ function page_example_description()
 function page_example_simple()
 {
     return array('#markup' => '<p>' . t('Simple page: The quick brown fox jumps over the lazy dog.') . '</p>');
+}
+
+function page_example_simple2()
+{
+    return array('#markup' => '<p>' . t('Simple2 page: The quick brown fox jumps over the lazy dog2.') . '</p>');
 }
 
 /**
