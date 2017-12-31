@@ -3,6 +3,10 @@
  * @file
  * Example of how to use Drupal's mail API.
  */
+/**
+ * @file
+ * Example of how to use Drupal's mail API.
+ */
 
 /**
  * @defgroup email_example Example: Email
@@ -62,6 +66,8 @@ function email_example_mail($key, &$message, $params)
             // as the body will later be transformed from HTML to text, meaning
             // that a normal use of '<' will result in truncation of the message.
             $message['body'][] = check_plain($params['message']);
+            //Added field by Mark Packham to test form
+            $message['body'][] = check_plain($params['pointless_field']);
             break;
     }
 }
@@ -183,6 +189,10 @@ function email_example_form()
         '#type' => 'textfield',
         '#title' => t('E-mail address (not a fake one)'),
         '#required' => true,
+    );
+    $form['pointless_field'] = array(
+        '#type' => 'textfield',
+        '#title' => t('A pointless field'),
     );
     $form['message'] = array(
         '#type' => 'textarea',
