@@ -199,6 +199,8 @@ function email_example_form()
         '#title' => t('Message'),
         //required can be removed and the default will be FALSE
         //'#required' => true,
+        '#description' => t('A needless description'),
+        '#default_value' => isset(  $context['message']) ? drupal_implode_tags($context['message']) : 'Some default text',
     );
     $form['submit'] = array(
         '#type' => 'submit',
