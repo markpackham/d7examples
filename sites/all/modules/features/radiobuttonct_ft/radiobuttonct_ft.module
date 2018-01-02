@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the radiobuttonCT_Ft feature.
+ */
+
+include_once 'radiobuttonct_ft.features.inc';
