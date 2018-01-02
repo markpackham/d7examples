@@ -1,0 +1,7 @@
+<?php
+/**
+ * @file
+ * Code for the webformtest_ft feature.
+ */
+
+include_once 'webformtest_ft.features.inc';
