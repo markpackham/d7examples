@@ -40,35 +40,38 @@
 /**
  * Implements hook_menu().
  */
-function filter_example_menu() {
-  $items['examples/filter_example'] = array(
-    'title' => 'Filter Example',
-    'page callback' => '_filter_example_information',
-    'access callback' => TRUE,
-  );
-  return $items;
+function filter_example_menu()
+{
+    $items['examples/filter_example'] = array(
+        'title' => 'Filter Example',
+        'page callback' => '_filter_example_information',
+        'access callback' => true,
+    );
+    return $items;
 }
 
 /**
  * Implements hook_help().
  */
-function filter_example_help($path, $arg) {
-  switch ($path) {
-    case 'admin/help#filter_example':
-      return _filter_example_information();
-  }
+function filter_example_help($path, $arg)
+{
+    switch ($path) {
+        case 'admin/help#filter_example':
+            return _filter_example_information();
+    }
 }
 
 /**
  * Simply returns a little bit of information about the example.
  */
-function _filter_example_information() {
-  return t("<p>This example provides two filters.</p><p>Foo Filter replaces
-    'foo' with a configurable replacement.</p><p>Time Tag replaces the string
-    '&lt;time /&gt;' with the current time.</p><p>To use these filters, go to !link and
-    configure an input format, or create a new one.</p>",
-    array('!link' => l(t('admin/config/content/formats'), 'admin/config/content/formats'))
-  );
+function _filter_example_information()
+{
+    return t("<p>This example provides 3 filters.</p><p>Foo Filter replaces
+    'foo' with a configurable replacement.</p><p>The Cammy filter is my own, it replaces the word 'Cammy' with 'Mai Shiranui'</p >
+    <p > Time Tag replaces the string '&lt;time /&gt;' with the current time .</p ><p > To use these filters, go to !link and
+configure an input format, or create a new one .</p > ",
+        array('!link' => l(t('admin/config/content/formats'), 'admin/config/content/formats'))
+    );
 }
 
 /**
@@ -79,25 +82,36 @@ function _filter_example_information() {
  * some preparation of the string because of the special html tags < and >. The
  * foo_filter is more complex, including its own settings and inline tips.
  */
-function filter_example_filter_info() {
-  $filters['filter_foo'] = array(
-    'title' => t('Foo Filter (example)'),
-    'description' => t('Every instance of "foo" in the input text will be replaced with a preconfigured replacement.'),
-    'process callback'  => '_filter_example_filter_foo_process',
-    'default settings' => array(
-      'filter_example_foo' => 'bar',
-    ),
-    'settings callback' => '_filter_example_filter_foo_settings',
-    'tips callback' => '_filter_example_filter_foo_tips',
-  );
-  $filters['filter_time'] = array(
-    'title' => t('Time Tag (example)'),
-    'description' => t("Every instance of the special &lt;time /&gt; tag will be replaced with the current date and time in the user's specified time zone."),
-    'prepare callback' => '_filter_example_filter_time_prepare',
-    'process callback' => '_filter_example_filter_time_process',
-    'tips callback' => '_filter_example_filter_time_tips',
-  );
-  return $filters;
+//Be sure to enable these filters here /admin/config/content/formats/full_html
+function filter_example_filter_info()
+{
+    $filters['filter_foo'] = array(
+        'title' => t('Foo Filter (example)'),
+        'description' => t('Every instance of "foo" in the input text will be replaced with a preconfigured replacement.'),
+        'process callback' => '_filter_example_filter_foo_process',
+        'default settings' => array(
+            'filter_example_foo' => 'bar',
+        ),
+        'settings callback' => '_filter_example_filter_foo_settings',
+        'tips callback' => '_filter_example_filter_foo_tips',
+    );
+    $filters['filter_time'] = array(
+        'title' => t('Time Tag (example)'),
+        'description' => t("Every instance of the special & lt;time /&gt; tag will be replaced with the current date and time in the user's specified time zone."),
+        'prepare callback' => '_filter_example_filter_time_prepare',
+        'process callback' => '_filter_example_filter_time_process',
+        'tips callback' => '_filter_example_filter_time_tips',
+    );
+    /*My tweak, just replaces "Cammy" with "Mai Shiarnui", user can't change the replacement and there are no tooltips */
+    $filters['filter_cammy'] = array(
+        'title' => t('Cammy White (example)'),
+        'description' => t('Every instance of "Cammy" in the input text will be replaced with "Mai Shiarnui".'),
+        'process callback' => '_filter_example_filter_cammy_process',
+        'default settings' => array(
+            'filter_example_foo' => 'Mai Shiranui',
+        ),
+    );
+    return $filters;
 }
 
 /*
@@ -121,14 +135,15 @@ function filter_example_filter_info() {
  * The settings defined in this form are stored in database by the filter
  * module, and they will be available in the $filter argument.
  */
-function _filter_example_filter_foo_settings($form, $form_state, $filter, $format, $defaults) {
-  $settings['filter_example_foo'] = array(
-    '#type' => 'textfield',
-    '#title' => t('Substitution string'),
-    '#default_value' => isset($filter->settings['filter_example_foo']) ? $filter->settings['filter_example_foo'] : $defaults['filter_example_foo'],
-    '#description' => t('The string to substitute for "foo" everywhere in the text.'),
-  );
-  return $settings;
+function _filter_example_filter_foo_settings($form, $form_state, $filter, $format, $defaults)
+{
+    $settings['filter_example_foo'] = array(
+        '#type' => 'textfield',
+        '#title' => t('Substitution string'),
+        '#default_value' => isset($filter->settings['filter_example_foo']) ? $filter->settings['filter_example_foo'] : $defaults['filter_example_foo'],
+        '#description' => t('The string to substitute for "foo" everywhere in the text.'),
+    );
+    return $settings;
 }
 
 /**
@@ -138,11 +153,18 @@ function _filter_example_filter_foo_settings($form, $form_state, $filter, $forma
  * once any necessary substitutions have taken place. The example just replaces
  * foo with our custom defined string in the settings page.
  */
-function _filter_example_filter_foo_process($text, $filter, $format) {
-  $replacement = isset($filter->settings['filter_example_foo']) ? $filter->settings['filter_example_foo'] : 'bar';
-  return str_replace('foo', $replacement, $text);
+function _filter_example_filter_foo_process($text, $filter, $format)
+{
+    $replacement = isset($filter->settings['filter_example_foo']) ? $filter->settings['filter_example_foo'] : 'bar';
+    return str_replace('foo', $replacement, $text);
 }
 
+/*My replacement using "Mai Shiarnui" whenever "Cammy" is written */
+function _filter_example_filter_cammy_process($text, $filter, $format)
+{
+    $replacement = 'Mai Shiranui';
+    return str_replace('Cammy', $replacement, $text);
+}
 
 /**
  * Filter tips callback for foo filter.
@@ -152,15 +174,16 @@ function _filter_example_filter_foo_process($text, $filter, $format) {
  * screen, while long tips are provided on a separate linked page. Short tips
  * are optional, but long tips are highly recommended.
  */
-function _filter_example_filter_foo_tips($filter, $format, $long = FALSE) {
-  $replacement = isset($filter->settings['filter_example_foo']) ? $filter->settings['filter_example_foo'] : 'bar';
-  if (!$long) {
-    // This string will be shown in the content add/edit form.
-    return t('<em>foo</em> replaced with %replacement.', array('%replacement' => $replacement));
-  }
-  else {
-    return t('Every instance of "foo" in the input text will be replaced with a configurable value. You can configure this value and put whatever you want there. The replacement value is "%replacement".', array('%replacement' => $replacement));
-  }
+function _filter_example_filter_foo_tips($filter, $format, $long = false)
+{
+    $replacement = isset($filter->settings['filter_example_foo']) ? $filter->settings['filter_example_foo'] : 'bar';
+    if (!$long) {
+        // This string will be shown in the content add/edit form.
+        return t('<em>foo</em> replaced with %replacement.', array('%replacement' => $replacement));
+    } else {
+        return t('Every instance of "foo" in the input text will be replaced with a configurable value. You can configure this value and put whatever you want there. The replacement value is "%replacement".',
+            array('%replacement' => $replacement));
+    }
 }
 
 /**
@@ -171,8 +194,9 @@ function _filter_example_filter_foo_tips($filter, $format, $long = FALSE) {
  * required. For more information, see "Temporary placeholders and
  * delimiters" at http://drupal.org/node/209715.
  */
-function _filter_example_filter_time_prepare($text, $filter) {
-  return preg_replace('!<time ?/>!', '[filter-example-time]', $text);
+function _filter_example_filter_time_prepare($text, $filter)
+{
+    return preg_replace('!<time ?/>!', '[filter-example-time]', $text);
 }
 
 /**
@@ -181,8 +205,9 @@ function _filter_example_filter_time_prepare($text, $filter) {
  * Now, in the "process" step, we'll search for our escaped time tags and
  * do the real filtering: replace the xml tag with the date.
  */
-function _filter_example_filter_time_process($text, $filter) {
-  return str_replace('[filter-example-time]', '<em>' . format_date(time()) . '</em>', $text);
+function _filter_example_filter_time_process($text, $filter)
+{
+    return str_replace('[filter-example-time]', '<em>' . format_date(time()) . '</em>', $text);
 }
 
 
@@ -194,8 +219,9 @@ function _filter_example_filter_time_process($text, $filter) {
  * screen, while long tips are provided on a separate linked page. Short tips
  * are optional, but long tips are highly recommended.
  */
-function _filter_example_filter_time_tips($filter, $format, $long = FALSE) {
-  return t('<em>&lt;time /&gt;</em> is replaced with the current time.');
+function _filter_example_filter_time_tips($filter, $format, $long = false)
+{
+    return t('<em>&lt;time /&gt;</em> is replaced with the current time.');
 }
 
 /**
